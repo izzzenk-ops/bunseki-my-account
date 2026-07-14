@@ -20,16 +20,25 @@
 　　 事前に用意する必要はありません。
 
 
-■ インストール（フォルダを置くだけ）
-　1. bunseki-my-account_v1.zip を解凍する
-　　 → 「bunseki-my-account」というフォルダができます
+■ インストール
+　まずzipを解凍すると「bunseki-my-account」フォルダができます。
+　そのあと、下のどちらかの方法で設置します。
 
-　2. そのフォルダを、下の場所に移動する：
+　【方法A：Claudeにやってもらう（かんたん・おすすめ）】
+　　解凍した「bunseki-my-account」フォルダをClaudeに渡して、こう言うだけ：
+
+　　　「このフォルダをセットアップして」
+
+　　Claudeが ~/.claude/skills/ への設置と、必要なツール
+　　（yt-dlp・ffmpeg・文字起こし）の初期インストールまでやってくれます。
+　　※Homebrewを初めて入れるときだけ、Macのパスワードを1回聞かれることがあります。
+
+　【方法B：自分で置く】
+　　「bunseki-my-account」フォルダを、下の場所に移動する：
 
 　　　~/.claude/skills/
 
 　　 （＝ホームフォルダの中の「.claude」→「skills」の中）
-
 　　 ※「.claude」は先頭にドットが付いた隠しフォルダです。
 　　 　Finderで表示するには　Command + Shift + .（ドット）を押す。
 

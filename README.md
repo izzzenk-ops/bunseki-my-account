@@ -6,20 +6,34 @@
 
 ---
 
-## 📥 インストール（フォルダを置くだけ）
+## 📥 インストール
 
-1. このページ右上の緑の **「Code」→「Download ZIP」** でダウンロード（gitが分かる人は `git clone` でもOK）
-2. 解凍してできた中の **`bunseki-my-account`** フォルダを、下の場所に移動：
+まず、このページ右上の緑の **「Code」→「Download ZIP」** でダウンロードして解凍します（gitが分かる人は `git clone` でもOK）。そのあと、下のどちらかの方法でフォルダを設置します。
 
-   ```
-   ~/.claude/skills/
-   ```
+### 方法A：Claudeにやってもらう（かんたん・おすすめ）
 
-   最終的にこうなればOK：`~/.claude/skills/bunseki-my-account/SKILL.md`
+解凍してできた **`bunseki-my-account`** フォルダをClaudeに渡して、こう言うだけ：
 
-   > `.claude` は隠しフォルダです。Finderで表示するには `Command + Shift + .`（ドット）
+> **「このフォルダをセットアップして」**
 
-3. Claudeに **「自分のアカウント分析して」** と送る
+Claudeが `~/.claude/skills/` への設置と、必要なツール（yt-dlp・ffmpeg・文字起こし）の初期インストールまでやってくれます。
+（※Homebrewを初めて入れるときだけ、Macのパスワードを1回聞かれることがあります）
+
+### 方法B：自分で置く
+
+解凍してできた **`bunseki-my-account`** フォルダを、下の場所に移動：
+
+```
+~/.claude/skills/
+```
+
+最終的にこうなればOK：`~/.claude/skills/bunseki-my-account/SKILL.md`
+
+> `.claude` は隠しフォルダです。Finderで表示するには `Command + Shift + .`（ドット）
+
+---
+
+設置できたら、Claudeに **「自分のアカウント分析して」** と送れば起動します。
 
 ---
 
