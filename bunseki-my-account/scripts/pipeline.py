@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """動画ダウンロードと文字起こしを並行実行するパイプライン（時間をほぼ半分にする）。
 
-必ず ~/telop-tool/venv/bin/python3 で実行すること（mlx_whisperが必要）:
-  ~/telop-tool/venv/bin/python3 pipeline.py <selection.json> <reels_dir> [--language ja]
+必ず文字起こしライブラリが入ったvenvのpythonで実行すること:
+  Mac    : ~/telop-tool/venv/bin/python3    pipeline.py <selection.json> <reels_dir> [--language ja]
+  Windows: ~/telop-tool/venv/Scripts/python.exe pipeline.py <selection.json> <reels_dir> [--language ja]
+
+文字起こしエンジンはOSで自動的に切り替わる（transcribe_engine.py）:
+  Mac(Apple Silicon)=mlx_whisper ／ Windows など=faster-whisper
 
 動作:
   - 別スレッド: yt-dlpで順次ダウンロード（2秒間隔、cookieなし→失敗時chromeのcookieで再試行）
@@ -17,9 +21,7 @@ import sys
 import threading
 import time
 
-import mlx_whisper
-
-MODEL = "mlx-community/whisper-large-v3-turbo"
+from transcribe_engine import transcribe_file
 
 
 def run_ytdlp(url, outdir, use_cookies):
@@ -90,18 +92,13 @@ def main():
             size = v.stat().st_size
             time.sleep(1)
         try:
-            r = mlx_whisper.transcribe(
-                str(v), path_or_hf_repo=MODEL, language=language, fp16=True)
-            (tdir / f"{v.stem}.txt").write_text(r["text"].strip(),
-                                                encoding="utf-8")
-            segs = [{"start": round(s["start"], 2), "end": round(s["end"], 2),
-                     "text": s["text"].strip()}
-                    for s in r.get("segments", [])]
+            text, segs = transcribe_file(str(v), language)
+            (tdir / f"{v.stem}.txt").write_text(text, encoding="utf-8")
             (tdir / f"{v.stem}.segments.json").write_text(
                 json.dumps(segs, ensure_ascii=False, indent=1),
                 encoding="utf-8")
             done += 1
-            head = r["text"].strip()[:40].replace("\n", " ")
+            head = text[:40].replace("\n", " ")
             print(f"[TR {done}] OK {v.name}: {head}...", flush=True)
         except Exception as e:
             # 失敗マーカーを置いて無限ループを防ぐ

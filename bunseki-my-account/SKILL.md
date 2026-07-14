@@ -1,6 +1,6 @@
 ---
 name: bunseki-my-account
-description: "【自分のアカウント分析】自分のInstagramの投稿を、裏側データ（外部リーチ・冒頭の視聴維持率・保存率・流入ソース）まで踏み込んで分析し、"次に何をやるか"が具体的に分かるHTMLレポートを作るスキル。ユーザーがスマホのインサイト画面録画（アカウント全体＋伸びた/伸びなかったリール）を渡すと、その録画から数値を読み取り、自分のリールをyt-dlpでダウンロード→mlx_whisperで文字起こしして「中身（冒頭ワード・構成）×裏側数値」を突き合わせる。伸びなかった原因診断・冒頭文5案・テーマ提案・台本構成テンプレ・診断マトリクス・次に作る10本リストを1枚のHTML報告書にまとめてChromeで開く。「自分のアカウント分析して」「自分の投稿を分析して」「マイアカウント分析して」「伸びてる投稿を分析して次の施策考えて」「自分のインサイト分析して」「bunseki-my-account」などのフレーズで必ず起動すること。運用中に自分の投稿を振り返って次の一手を決めたい場合は常にこのスキルを使う。※競合・参考アカウントの分析は bunseki-competitor-account、自分のアカウントのコンセプト設計は insta-concept-design を使う。"
+description: "【自分のアカウント分析】自分のInstagramの投稿を、裏側データ（外部リーチ・冒頭の視聴維持率・保存率・流入ソース）まで踏み込んで分析し、"次に何をやるか"が具体的に分かるHTMLレポートを作るスキル。ユーザーがスマホのインサイト画面録画（アカウント全体＋伸びた/伸びなかったリール）を渡すと、その録画から数値を読み取り、自分のリールをyt-dlpでダウンロード→文字起こし（OS自動判定：Mac=mlx_whisper／Windows=faster-whisper）して「中身（冒頭ワード・構成）×裏側数値」を突き合わせる。伸びなかった原因診断・冒頭文5案・テーマ提案・台本構成テンプレ・診断マトリクス・次に作る10本リストを1枚のHTML報告書にまとめてChromeで開く。「自分のアカウント分析して」「自分の投稿を分析して」「マイアカウント分析して」「伸びてる投稿を分析して次の施策考えて」「自分のインサイト分析して」「bunseki-my-account」などのフレーズで必ず起動すること。運用中に自分の投稿を振り返って次の一手を決めたい場合は常にこのスキルを使う。※競合・参考アカウントの分析は bunseki-competitor-account、自分のアカウントのコンセプト設計は insta-concept-design を使う。"
 ---
 
 # 自分のアカウント分析（bunseki-my-account）｜裏側データ→次の一手が明確になるレポート
@@ -26,12 +26,12 @@ description: "【自分のアカウント分析】自分のInstagramの投稿を
 
 **受講生に配って同じ状態で使える自己セットアップ型**（[[feedback-skills-student-distributable]]）。真の前提はこれだけ：
 
-- **Apple Silicon（M系）Mac**（mlx_whisperの制約）
+- **Mac（Apple Silicon）** または **Windows**（※Windows版はベータ・実機未検証）
 - Chrome拡張（Claude in Chrome）が接続済みで、Chromeで自分の instagram.com にログイン済み
 - Claude Code が使えること
 - **自分のスマホでインサイトの画面録画が撮れること**（撮り方はSTEP 1で案内する）
 
-`yt-dlp`・`ffmpeg`・`mlx_whisper` は入っていなくてよい。STEP 0の `setup.sh` が自動で入れる。
+`yt-dlp`・`ffmpeg`・文字起こしライブラリは入っていなくてよい。STEP 0のセットアップが自動で入れる。**文字起こしエンジンはOSで自動切替**（`transcribe_engine.py`）：Mac（Apple Silicon）=mlx_whisper／Windowsなど=faster-whisper。
 
 ## 出力先
 
@@ -53,14 +53,19 @@ description: "【自分のアカウント分析】自分のInstagramの投稿を
 
 ## STEP 0：環境セットアップ＋ツール読み込み
 
-**最初に必ず環境セットアップを実行する**（冪等なので毎回流してよい）：
+**最初に必ず環境セットアップを実行する**（冪等なので毎回流してよい）。**実行OSを判定して対応するスクリプトを走らせる**：
 
 ```bash
+# Mac（Apple Silicon）
 bash <skill>/scripts/setup.sh
 ```
+```powershell
+# Windows（PowerShell）
+powershell -ExecutionPolicy Bypass -File <skill>\scripts\setup.ps1
+```
 
-- 全項目が ✓ で「✅ セットアップ完了」なら次へ。初回はHomebrew/whisper導入で数分かかることがある
-- `!` が残る場合はその項目をユーザーに伝える（再実行で解決することが多い）
+- 全項目が OK で「セットアップ完了」なら次へ。初回はツール導入で数分かかることがある（Mac=Homebrew/mlx_whisper、Windows=winget/faster-whisper）
+- `!`（Windowsは`[!]`）が残る場合はその項目をユーザーに伝える（再実行、またはターミナル/PowerShellを開き直すと解決することが多い）
 
 Chromeツールが遅延読み込みの場合、**1回のToolSearch**でまとめてロード：
 
@@ -136,10 +141,16 @@ python3 <skill>/scripts/select_reels.py data/reels.json data/ --top 8 --latest 4
 ## STEP 3＋4：自分のリールをDL＆文字起こし（並行パイプライン）
 
 ```bash
+# Mac
 ~/telop-tool/venv/bin/python3 <skill>/scripts/pipeline.py data/selection.json reels/ --language ja
 ```
+```powershell
+# Windows
+& "$HOME\telop-tool\venv\Scripts\python.exe" <skill>\scripts\pipeline.py data\selection.json reels\ --language ja
+```
 
-- DL（2秒間隔・cookieなし→失敗時chrome cookie）と文字起こし（Whisperロード1回）を並行実行。済みファイルはスキップ
+- 文字起こしエンジンはvenv内で自動切替（Mac=mlx_whisper／Windows=faster-whisper）。**Windowsのfaster-whisperはCPU動作なので、初回はモデルDL＋各本の処理にMacより時間がかかる**（ベータ）
+- DL（2秒間隔・cookieなし→失敗時chrome cookie）と文字起こし（モデルのロード1回）を並行実行。済みファイルはスキップ
 - **パイプライン実行中に、STEP 1b/2の情報で先に分析を書き進める**（診断マトリクス・全体サマリー・裏側数値の整理）。完了時に残るのは冒頭/構成分析と報告書組み立てだけになる
 - 一部失敗しても続行。失敗分は報告書に正直に書く
 - Whisper注意: 固有名詞の誤変換はあり得る（明らかなものは文脈補正、創作しない）。**末尾の同一文字繰り返し（幻覚）は無視**

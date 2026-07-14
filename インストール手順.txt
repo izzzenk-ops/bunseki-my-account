@@ -11,13 +11,15 @@
 
 
 ■ 動かすのに必要なもの（最初の1回だけ）
-　1. Apple Silicon（M1/M2/M3…）のMac
+　1. Mac（Apple Silicon / M1以降）または Windows（Windows対応はベータ）
 　2. Claude（Claude Code）が使える状態
 　3. Chrome拡張「Claude in Chrome」を接続
 　4. そのChromeで自分のInstagramにログイン
 
 　※ yt-dlp / ffmpeg / 文字起こしツールは自動で入るので、
-　　 事前に用意する必要はありません。
+　　 事前に用意する必要はありません（OSに合わせて自動で入ります）。
+　※ Windows版はまだ実機検証が済んでいないベータです。
+　　 動かないところがあれば教えてください。
 
 
 ■ インストール

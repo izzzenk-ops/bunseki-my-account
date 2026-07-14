@@ -39,12 +39,14 @@ Claudeが `~/.claude/skills/` への設置と、必要なツール（yt-dlp・ff
 
 ## ✅ 動かすのに必要なもの（最初の1回だけ）
 
-- Apple Silicon（M1/M2/M3…）の Mac
+- **Mac（Apple Silicon / M1以降）** または **Windows**（※Windows対応はベータ版です。下記参照）
 - Claude（Claude Code）が使える状態
 - Chrome拡張 **「Claude in Chrome」** を接続
 - そのChromeで **自分のInstagramにログイン**
 
-`yt-dlp` / `ffmpeg` / 文字起こしツールは**自動で入る**ので、事前準備は不要です（初回だけ数分かかります）。
+`yt-dlp` / `ffmpeg` / 文字起こしツールは**自動で入る**ので、事前準備は不要です（初回だけ数分かかります）。文字起こしはOSに合わせて自動で切り替わります（Mac=mlx_whisper／Windows=faster-whisper）。
+
+> ⚠️ **Windowsの方へ（ベータ）**：Windows対応は入れてありますが、まだ実機での検証が済んでいません。動かないところがあれば教えてください（順次直します）。Windowsは文字起こしがCPU処理のため、Macより少し時間がかかります。
 
 ---
 
